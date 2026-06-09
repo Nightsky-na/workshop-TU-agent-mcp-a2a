@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+my_notes.txt
+group_notes.txt
+.DS_Store
+# ของผู้สอนทั้งหมด ไม่ขึ้น git (key, คู่มือผู้สอน, รูปตาราง)
+resource/
+invoices/
+ledger.csv
+make_html.py
+.adk/
+docs/

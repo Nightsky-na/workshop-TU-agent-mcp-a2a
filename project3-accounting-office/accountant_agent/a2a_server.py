@@ -1,0 +1,24 @@
+"""เปิด Accountant Agent เป็น A2A server (port 8002)
+
+วิธีรัน (จากโฟลเดอร์ project3-accounting-office):
+
+    uvicorn accountant_agent.a2a_server:app --host 0.0.0.0 --port 8002
+
+ดูนามบัตรได้ที่ http://localhost:8002/.well-known/agent-card.json
+"""
+
+import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).parent / ".env")
+
+from google.adk.a2a.utils.agent_to_a2a import to_a2a
+
+from accountant_agent.agent import root_agent
+
+# ตั้ง A2A_HOST=<IP ของเรา> ถ้าจะให้เครื่องอื่นเรียกข้ามเครื่อง
+A2A_HOST = os.environ.get("A2A_HOST", "localhost")
+
+app = to_a2a(root_agent, host=A2A_HOST, port=8002)

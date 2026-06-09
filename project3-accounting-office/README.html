@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🏢 Project 3 — Workshop Agentic AI · MCP · A2A</title>
+<style>
+:root { --ink: #1f2430; --soft: #5b6472; --line: #e3e7ee; --bg: #f6f8fb;
+        --card: #ffffff; --accent: #2f6fed; --code-bg: #0f172a; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+       font-family: "Sukhumvit Set", "SF Pro Text", system-ui, "Segoe UI",
+                    Tahoma, "Noto Sans Thai", sans-serif;
+       line-height: 1.75; }
+nav { position: sticky; top: 0; z-index: 9; background: var(--card);
+      border-bottom: 1px solid var(--line); padding: 10px 16px;
+      display: flex; gap: 6px; flex-wrap: wrap; }
+nav a { text-decoration: none; color: var(--soft); padding: 6px 12px;
+        border-radius: 999px; font-size: 14px; }
+nav a:hover { background: var(--bg); }
+nav a.active { background: var(--accent); color: #fff; }
+main { max-width: 880px; margin: 0 auto; padding: 32px 20px 80px; }
+article { background: var(--card); border: 1px solid var(--line);
+          border-radius: 16px; padding: 36px 40px; }
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.35rem; margin-top: 2.2em; padding-bottom: 8px;
+     border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.1rem; margin-top: 1.8em; }
+a { color: var(--accent); }
+code { background: #eef1f6; border-radius: 6px; padding: 2px 6px;
+       font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+       font-size: .88em; }
+pre { background: var(--code-bg); color: #e2e8f0; border-radius: 12px;
+      padding: 18px 20px; overflow-x: auto; line-height: 1.55; }
+pre code { background: none; color: inherit; padding: 0; font-size: .85rem; }
+table { border-collapse: collapse; width: 100%; margin: 1em 0;
+        font-size: .95em; }
+th, td { border: 1px solid var(--line); padding: 9px 13px; text-align: left;
+         vertical-align: top; }
+th { background: var(--bg); }
+blockquote { margin: 1em 0; padding: 10px 18px; border-left: 4px solid
+             var(--accent); background: #eef4ff; border-radius: 0 10px 10px 0;
+             color: var(--ink); }
+blockquote p { margin: 4px 0; }
+footer { text-align: center; color: var(--soft); font-size: 13px;
+         margin-top: 28px; }
+@media print { nav { display: none; } article { border: none; } }
+</style>
+</head>
+<body>
+<nav><a href="../README.html">🏠 หน้าหลัก</a>
+<a href="../workshop1-agentic-ai/README.html">🤖 Workshop 1</a>
+<a href="../workshop2-mcp-a2a/README.html">🔌 Workshop 2</a>
+<a href="README.html" class="active">🏢 Project 3</a>
+<a href="../resource/INSTRUCTOR_GUIDE.html">👨‍🏫 คู่มือผู้สอน</a></nav>
+<main><article>
+<h1>🏢 Project 3: AI Accounting Office — บริษัทจำลองที่พนักงานเป็น Agent ทั้งหมด</h1>
+<p>โปรเจกต์รวมยอด <strong>Multi-Agent + MCP + A2A</strong> ในเรื่องเดียว: บริษัท "AGI Cafe Co., Ltd."
+มี CEO เป็น orchestrator และพนักงาน 2 คนเป็น A2A agent ที่ถือเครื่องมือ MCP คนละชุด</p>
+<pre><code>                      ┌─────────────┐
+              เรา ──▶ │  CEO Agent  │  (adk web — ไม่มี tool เลย!)
+                      └──────┬──────┘
+              A2A ┌──────────┼──────────┐ A2A
+                  ▼          ▼          ▼
+        ┌────────────┐ ┌────────────┐ ┌─────────────┐
+        │ Analyst 📊 │ │Accountant🧮│ │ Finance 💰  │
+        │ (:8003)    │ │ (:8002)    │ │ CFO (:8004) │
+        └─────┬──────┘ └─────┬──────┘ └──────┬──────┘
+          MCP │          MCP │           A2A │ ถามนักบัญชี
+              ▼              ▼               │ (AgentTool)
+        ┌────────────┐ ┌────────────┐        │
+        │ set-mcp    │ │invoice_mcp │ ◀──────┘
+        │ งบหุ้น SET  │ │ บิลPDF/บัญชี│
+        │(community!)│ │(เราเขียนเอง)│
+        └────────────┘ └────────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>พนักงาน</th>
+<th>หน้าที่</th>
+<th>จุดสอน</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Analyst 📊</td>
+<td>เช็คเครดิตบริษัท "ลูกค้า" จากงบหุ้น SET</td>
+<td>ใช้ MCP server ของ community</td>
+</tr>
+<tr>
+<td>Accountant 🧮</td>
+<td>ออกบิล PDF + ลงบัญชี + สรุปยอด</td>
+<td>ใช้ MCP server ที่เราเขียนเอง</td>
+</tr>
+<tr>
+<td>Finance (CFO) 💰</td>
+<td>วิเคราะห์การเงิน "บริษัทเรา" + ให้คำแนะนำ</td>
+<td><strong>agent คุยกับ agent</strong>: ไม่แตะบัญชีเอง แต่ถามนักบัญชีผ่าน A2A (AgentTool) แล้ววิเคราะห์ต่อ</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Use case ต่อกันครบ loop ธุรกิจ:</strong></p>
+<ol>
+<li>ลูกค้าใหม่เป็นบริษัทในตลาดหุ้น → CEO ส่งให้ <strong>Analyst เช็คเครดิต</strong> (ดึงงบจริงจาก SET)</li>
+<li>ฐานะโอเค → ตกลงรับงาน</li>
+<li>CEO สั่ง <strong>Accountant ออกใบแจ้งหนี้</strong> (VAT 7%) + ลงบัญชีรายรับ</li>
+<li>สิ้นเดือนถาม <strong>กำไร/ขาดทุน</strong></li>
+</ol>
+<p>จุดเด่นที่ใช้สอน: <code>set-mcp</code> คือ MCP server <strong>ของคนอื่นจาก community</strong> (<code>pip install set-mcp</code>)
+— เราไม่ได้เขียนสักบรรทัด แต่ agent ใช้ได้เลย นี่คือพลังของมาตรฐานกลาง</p>
+<h2>วิธีรัน (ใช้ 4 terminals)</h2>
+<p>ทุก terminal ต้อง activate venv ก่อน: <code>source ../.venv/bin/activate</code>
+และต้องมีไฟล์ <code>.env</code> (มี <code>GOOGLE_API_KEY</code>) ใน agent ทุกโฟลเดอร์</p>
+<p><strong>Terminal 1 — นักบัญชี (ต้องเปิดก่อน CFO):</strong></p>
+<pre><code class="language-bash">cd project3-accounting-office
+uvicorn accountant_agent.a2a_server:app --host 0.0.0.0 --port 8002
+</code></pre>
+<p><strong>Terminal 2 — นักวิเคราะห์:</strong></p>
+<pre><code class="language-bash">cd project3-accounting-office
+uvicorn analyst_agent.a2a_server:app --host 0.0.0.0 --port 8003
+</code></pre>
+<p><strong>Terminal 3 — CFO (เปิดหลังนักบัญชี):</strong></p>
+<pre><code class="language-bash">cd project3-accounting-office
+uvicorn finance_agent.a2a_server:app --host 0.0.0.0 --port 8004
+</code></pre>
+<p><strong>Terminal 4 — CEO (UI):</strong></p>
+<pre><code class="language-bash">cd project3-accounting-office
+adk web
+</code></pre>
+<p>เปิด <a href="http://localhost:8000">http://localhost:8000</a> เลือก <code>ceo_agent</code></p>
+<h2>บทพูดสำหรับ demo (ลองตามลำดับ)</h2>
+<blockquote>
+<p>ลูกค้าใหม่คือ CPALL อยากจ้างเราทำการตลาด ช่วยเช็คหน่อยว่าฐานะการเงินเขาโอเคไหม</p>
+<p>โอเค รับงานนี้ ออกใบแจ้งหนี้ค่าที่ปรึกษาการตลาด 50,000 บาทให้ CPALL แล้วลงบัญชีรายรับด้วย</p>
+<p>เดือนนี้บริษัทเรากำไรเท่าไหร่แล้ว?</p>
+<p>ช่วยวิเคราะห์การเงินบริษัทเราหน่อย มีอะไรต้องระวังไหม</p>
+</blockquote>
+<p>ข้อสุดท้าย CEO จะส่งให้ <strong>CFO</strong> — แล้ว CFO จะไป "คุยกับนักบัญชี" ขอตัวเลขมาเอง (ดูใน terminal ของนักบัญชีจะเห็น request จาก CFO วิ่งเข้า) ก่อนวิเคราะห์อัตรากำไรและให้คำแนะนำ</p>
+<p><strong>สิ่งที่ต้องดู 👀:</strong>
+- trace ใน adk web: CEO ไม่เรียก tool เอง แต่ <code>transfer_to_agent</code> ไปหาลูกน้อง
+- terminal ของ accountant/analyst: เห็น request วิ่งเข้า (งานไปทำที่ process อื่นจริง)
+- ไฟล์จริงเกิดขึ้น: <strong>ใบแจ้งหนี้ PDF</strong> <code>mcp_server/invoices/INV-0001.pdf</code> (เปิดโชว์บนจอได้เลย — หัวบริษัท ตาราง VAT ครบ) พร้อม <code>.txt</code> และ <code>mcp_server/ledger.csv</code></p>
+<h2>เรียกข้ามเครื่อง (ทีมละเครื่อง)</h2>
+<p>เครื่องเพื่อนเปิดนักบัญชี: <code>A2A_HOST=&lt;ip เพื่อน&gt; uvicorn accountant_agent.a2a_server:app --host 0.0.0.0 --port 8002</code></p>
+<p>เครื่องเราชี้ไปหา:</p>
+<pre><code class="language-bash">ACCOUNTANT_URL=http://&lt;ip เพื่อน&gt;:8002 adk web
+</code></pre>
+<h2>ไอเดียต่อยอด (โจทย์กลุ่ม)</h2>
+<ul>
+<li>เพิ่ม <strong>HR Agent</strong> ที่มี tool คำนวณเงินเดือน/ภาษีหัก ณ ที่จ่าย</li>
+<li>เพิ่ม tool <code>list_invoices()</code> ให้นักบัญชีค้นบิลเก่า</li>
+<li>ให้ Analyst เปรียบเทียบงบ 2 บริษัทแล้วแนะนำว่าควรรับลูกค้ารายไหนก่อน</li>
+<li>ให้ CFO เปรียบเทียบกำไรบริษัทเรากับบริษัทในตลาดหุ้น (CFO คุยกับ Analyst!)</li>
+</ul>
+</article>
+<footer>Workshop Agentic AI · MCP · A2A — สร้างด้วย Google ADK</footer>
+</main>
+</body>
+</html>

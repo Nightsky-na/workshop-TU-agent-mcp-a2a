@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🤖 Workshop 1 — Workshop Agentic AI · MCP · A2A</title>
+<style>
+:root { --ink: #1f2430; --soft: #5b6472; --line: #e3e7ee; --bg: #f6f8fb;
+        --card: #ffffff; --accent: #2f6fed; --code-bg: #0f172a; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+       font-family: "Sukhumvit Set", "SF Pro Text", system-ui, "Segoe UI",
+                    Tahoma, "Noto Sans Thai", sans-serif;
+       line-height: 1.75; }
+nav { position: sticky; top: 0; z-index: 9; background: var(--card);
+      border-bottom: 1px solid var(--line); padding: 10px 16px;
+      display: flex; gap: 6px; flex-wrap: wrap; }
+nav a { text-decoration: none; color: var(--soft); padding: 6px 12px;
+        border-radius: 999px; font-size: 14px; }
+nav a:hover { background: var(--bg); }
+nav a.active { background: var(--accent); color: #fff; }
+main { max-width: 880px; margin: 0 auto; padding: 32px 20px 80px; }
+article { background: var(--card); border: 1px solid var(--line);
+          border-radius: 16px; padding: 36px 40px; }
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.35rem; margin-top: 2.2em; padding-bottom: 8px;
+     border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.1rem; margin-top: 1.8em; }
+a { color: var(--accent); }
+code { background: #eef1f6; border-radius: 6px; padding: 2px 6px;
+       font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+       font-size: .88em; }
+pre { background: var(--code-bg); color: #e2e8f0; border-radius: 12px;
+      padding: 18px 20px; overflow-x: auto; line-height: 1.55; }
+pre code { background: none; color: inherit; padding: 0; font-size: .85rem; }
+table { border-collapse: collapse; width: 100%; margin: 1em 0;
+        font-size: .95em; }
+th, td { border: 1px solid var(--line); padding: 9px 13px; text-align: left;
+         vertical-align: top; }
+th { background: var(--bg); }
+blockquote { margin: 1em 0; padding: 10px 18px; border-left: 4px solid
+             var(--accent); background: #eef4ff; border-radius: 0 10px 10px 0;
+             color: var(--ink); }
+blockquote p { margin: 4px 0; }
+footer { text-align: center; color: var(--soft); font-size: 13px;
+         margin-top: 28px; }
+@media print { nav { display: none; } article { border: none; } }
+</style>
+</head>
+<body>
+<nav><a href="../README.html">🏠 หน้าหลัก</a>
+<a href="README.html" class="active">🤖 Workshop 1</a>
+<a href="../workshop2-mcp-a2a/README.html">🔌 Workshop 2</a>
+<a href="../project3-accounting-office/README.html">🏢 Project 3</a>
+<a href="../resource/INSTRUCTOR_GUIDE.html">👨‍🏫 คู่มือผู้สอน</a></nav>
+<main><article>
+<h1>🤖 Workshop 1: Agentic-AI — สร้าง Agent ตัวแรกของคุณ</h1>
+<p><strong>เวลา 11:00 – 12:00</strong> | ดู agent ตัวอย่างทำงาน แล้ว <strong>พาสร้าง agent + tool ใหม่ของตัวเองตั้งแต่ศูนย์</strong></p>
+<h2>Agent คืออะไร?</h2>
+<pre><code>                    ┌──────────────────────────────┐
+   คำถามของเรา ───▶ │           AGENT              │
+                    │                              │
+                    │  🧠 model       = สมอง (LLM)  │
+                    │  📜 instruction = บุคลิก/กติกา │
+                    │  🔧 tools       = เครื่องมือ    │ ──▶ คำตอบ
+                    │                              │
+                    │  agent &quot;คิดเอง&quot; ว่าจะใช้        │
+                    │  เครื่องมือไหน เมื่อไหร่          │
+                    └──────────────────────────────┘
+</code></pre>
+<p>ความต่างจาก chatbot ธรรมดา: agent <strong>ตัดสินใจเองและลงมือทำ</strong> (เรียก tool) ไม่ใช่แค่ตอบข้อความ</p>
+<h2>🏃 Step 1 — รัน agent ตัวอย่าง: Research Buddy (15 นาที)</h2>
+<pre><code class="language-bash">cd workshop1-agentic-ai
+adk web
+</code></pre>
+<p>เปิด <a href="http://localhost:8000">http://localhost:8000</a> เลือก <code>research_agent</code> แล้วลองพิมพ์:</p>
+<blockquote>
+<p>หา paper เกี่ยวกับ "multi agent systems" ให้หน่อย</p>
+<p>ช่วยจดไว้หน่อยว่าพรุ่งนี้ต้องส่งรายงาน</p>
+<p>สรุป paper อันแรกให้หน่อย แล้วจดเก็บไว้เลย</p>
+</blockquote>
+<p><strong>สิ่งที่ต้องดู 👀:</strong> คลิก event ในแถบซ้าย — จะเห็นว่า agent:
+1. อ่านคำถามของเรา
+2. <strong>เลือกเรียก</strong> <code>search_arxiv</code> / <code>save_note</code> เอง พร้อม arguments ที่มันคิดขึ้น
+3. ได้ผลลัพธ์กลับมา แล้วเรียบเรียงเป็นคำตอบ</p>
+<p>ข้อสุดท้าย agent จะต่อ tool หลายตัวเอง: <code>read_paper</code> ดึง PDF → สรุปเป็นไทย → <code>save_note</code> บันทึกให้</p>
+<p>นี่คือหัวใจของ "agentic" — เราไม่ได้สั่งให้เรียก function, agent ตัดสินใจเอง
+(โครงสร้าง code อยู่ใน <code>research_agent/</code> — แค่ 2 ไฟล์: <code>agent.py</code> กับ <code>tools.py</code>)</p>
+<h2>✨ Step 2 — พาสร้าง agent ใหม่ด้วยกัน: "Deadline Buddy" (25 นาที)</h2>
+<p>พิมพ์ตามทีละขั้น (ใครหลุดดูฉบับเต็มได้ที่ <code>solutions/deadline_buddy/</code>)</p>
+<h3>2.1 สร้างโฟลเดอร์ agent ใหม่ (ใน <code>workshop1-agentic-ai/</code>)</h3>
+<pre><code class="language-bash">mkdir deadline_buddy
+</code></pre>
+<h3>2.2 สร้างไฟล์ <code>deadline_buddy/__init__.py</code></h3>
+<pre><code class="language-python">from . import agent
+</code></pre>
+<h3>2.3 สร้างไฟล์ <code>deadline_buddy/agent.py</code> — เริ่มจาก tool ก่อน</h3>
+<blockquote>
+<p>💡 tool = ฟังก์ชัน Python ธรรมดา + docstring ที่อธิบายชัดๆ ว่าใช้ทำอะไร</p>
+</blockquote>
+<pre><code class="language-python">from datetime import date
+
+from google.adk.agents import Agent
+
+
+def days_left(deadline: str) -&gt; str:
+    &quot;&quot;&quot;นับว่าเหลืออีกกี่วันจะถึงกำหนดส่งงานหรือวันสอบ
+
+    Args:
+        deadline: วันกำหนดส่ง รูปแบบ YYYY-MM-DD เช่น &quot;2026-06-30&quot;
+    &quot;&quot;&quot;
+    target = date.fromisoformat(deadline)
+    days = (target - date.today()).days
+    if days &lt; 0:
+        return f&quot;เลยกำหนดมาแล้ว {-days} วัน! 😱&quot;
+    return f&quot;เหลืออีก {days} วัน&quot;
+</code></pre>
+<h3>2.4 ต่อท้ายด้วยตัว agent</h3>
+<pre><code class="language-python">root_agent = Agent(
+    name=&quot;deadline_buddy&quot;,
+    model=&quot;gemini-2.5-flash&quot;,
+    description=&quot;เพื่อนเตือนเดดไลน์ของนักศึกษา&quot;,
+    instruction=&quot;&quot;&quot;
+คุณคือ Deadline Buddy เพื่อนรักนักศึกษา พูดไทยติดตลกนิดๆ
+- ถามถึงเดดไลน์/วันสอบว่าเหลือกี่วัน → ใช้ tool days_left
+- ถ้าเหลือน้อยกว่า 7 วัน ให้แซวเบาๆ แล้วช่วยวางแผนให้
+&quot;&quot;&quot;,
+    tools=[days_left],
+)
+</code></pre>
+<h3>2.5 ใส่ API key แล้วรัน</h3>
+<pre><code class="language-bash">cp research_agent/.env deadline_buddy/.env
+</code></pre>
+<p>กลับไปหน้า adk web → refresh → เลือก <code>deadline_buddy</code> แล้วลอง:</p>
+<blockquote>
+<p>สอบ final วันที่ 30 มิ.ย. เหลือกี่วัน?</p>
+</blockquote>
+<p><strong>จุดสังเกต 👀:</strong> เราพิมพ์ "30 มิ.ย." แต่ใน trace จะเห็น agent แปลงเป็น <code>"2026-06-30"</code>
+ให้ตรงรูปแบบที่ docstring บอกไว้เอง — docstring สำคัญขนาดนี้!</p>
+<h2>🔧 Step 3 — เพิ่ม tool ตัวที่สอง (15 นาที)</h2>
+<p>เพิ่มฟังก์ชันนี้เหนือ <code>root_agent</code> แล้วอย่าลืมใส่ใน <code>tools=[...]</code>:</p>
+<pre><code class="language-python">import random
+
+def pick_one(choices: list[str]) -&gt; str:
+    &quot;&quot;&quot;จับสลากเลือก 1 อย่างจากตัวเลือกที่ให้มา เช่น เลือกหัวข้อรายงาน เลือกคนนำเสนอ
+
+    Args:
+        choices: รายการตัวเลือก เช่น [&quot;หัวข้อ A&quot;, &quot;หัวข้อ B&quot;]
+    &quot;&quot;&quot;
+    return f&quot;ผลจับสลาก: {random.choice(choices)} 🎲&quot;
+</code></pre>
+<p>refresh แล้วลอง:</p>
+<blockquote>
+<p>เลือกไม่ถูกว่าจะทำรายงานเรื่อง LLM หรือ Computer Vision ดี จับสลากให้หน่อย</p>
+<p>งานส่ง 25 มิ.ย. เหลือกี่วัน แล้วช่วยเลือกหน่อยว่าควรเริ่มจากอ่าน paper หรือเขียน code ก่อน</p>
+</blockquote>
+<p>ข้อหลังนี้ agent จะใช้ <strong>2 tools ต่อกันเอง</strong> — ดูลำดับใน trace!</p>
+<h2>🧪 Step 4 — อิสระ: tool ในแบบของคุณ (5 นาที + ทำต่อพักเที่ยงได้)</h2>
+<p>ไอเดีย: <code>gpa_calculator(grades: list[float])</code> · <code>coin_flip()</code> · <code>count_words(text: str)</code>
+หรือคิดเองเลย — แค่เขียนฟังก์ชัน + docstring ดีๆ แล้วใส่ใน <code>tools=[...]</code></p>
+<h2>📌 สรุปสิ่งที่ได้เรียนรู้</h2>
+<table>
+<thead>
+<tr>
+<th>แนวคิด</th>
+<th>เห็นได้จาก</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agent = model + instruction + tools</td>
+<td><code>agent.py</code> ที่เราพิมพ์เอง</td>
+</tr>
+<tr>
+<td>Tool = ฟังก์ชัน Python + docstring ดีๆ</td>
+<td><code>days_left</code>, <code>pick_one</code></td>
+</tr>
+<tr>
+<td>Agent เลือก tool เอง + แปลง input ให้ตรง spec เอง</td>
+<td>trace ใน adk web</td>
+</tr>
+</tbody>
+</table>
+<p>ช่วงบ่ายเราจะเอา agent ไป <strong>ต่อกับโลกภายนอก</strong> ผ่าน MCP และให้มัน <strong>คุยกับ agent ของเพื่อน</strong> ผ่าน A2A 🚀</p>
+</article>
+<footer>Workshop Agentic AI · MCP · A2A — สร้างด้วย Google ADK</footer>
+</main>
+</body>
+</html>

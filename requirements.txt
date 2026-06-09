@@ -1,0 +1,5 @@
+google-adk[a2a]==2.2.0
+mcp>=1.5
+set-mcp
+pypdf
+fpdf2

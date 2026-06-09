@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔌 Workshop 2 — Workshop Agentic AI · MCP · A2A</title>
+<style>
+:root { --ink: #1f2430; --soft: #5b6472; --line: #e3e7ee; --bg: #f6f8fb;
+        --card: #ffffff; --accent: #2f6fed; --code-bg: #0f172a; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+       font-family: "Sukhumvit Set", "SF Pro Text", system-ui, "Segoe UI",
+                    Tahoma, "Noto Sans Thai", sans-serif;
+       line-height: 1.75; }
+nav { position: sticky; top: 0; z-index: 9; background: var(--card);
+      border-bottom: 1px solid var(--line); padding: 10px 16px;
+      display: flex; gap: 6px; flex-wrap: wrap; }
+nav a { text-decoration: none; color: var(--soft); padding: 6px 12px;
+        border-radius: 999px; font-size: 14px; }
+nav a:hover { background: var(--bg); }
+nav a.active { background: var(--accent); color: #fff; }
+main { max-width: 880px; margin: 0 auto; padding: 32px 20px 80px; }
+article { background: var(--card); border: 1px solid var(--line);
+          border-radius: 16px; padding: 36px 40px; }
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.35rem; margin-top: 2.2em; padding-bottom: 8px;
+     border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.1rem; margin-top: 1.8em; }
+a { color: var(--accent); }
+code { background: #eef1f6; border-radius: 6px; padding: 2px 6px;
+       font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+       font-size: .88em; }
+pre { background: var(--code-bg); color: #e2e8f0; border-radius: 12px;
+      padding: 18px 20px; overflow-x: auto; line-height: 1.55; }
+pre code { background: none; color: inherit; padding: 0; font-size: .85rem; }
+table { border-collapse: collapse; width: 100%; margin: 1em 0;
+        font-size: .95em; }
+th, td { border: 1px solid var(--line); padding: 9px 13px; text-align: left;
+         vertical-align: top; }
+th { background: var(--bg); }
+blockquote { margin: 1em 0; padding: 10px 18px; border-left: 4px solid
+             var(--accent); background: #eef4ff; border-radius: 0 10px 10px 0;
+             color: var(--ink); }
+blockquote p { margin: 4px 0; }
+footer { text-align: center; color: var(--soft); font-size: 13px;
+         margin-top: 28px; }
+@media print { nav { display: none; } article { border: none; } }
+</style>
+</head>
+<body>
+<nav><a href="../README.html">🏠 หน้าหลัก</a>
+<a href="../workshop1-agentic-ai/README.html">🤖 Workshop 1</a>
+<a href="README.html" class="active">🔌 Workshop 2</a>
+<a href="../project3-accounting-office/README.html">🏢 Project 3</a>
+<a href="../resource/INSTRUCTOR_GUIDE.html">👨‍🏫 คู่มือผู้สอน</a></nav>
+<main><article>
+<h1>🔌 Workshop 2: MCP &amp; A2A — ต่อ Agent เข้ากับโลกภายนอก</h1>
+<p><strong>เวลา 14:15 – 15:15</strong> | เอา Research Buddy จากช่วงเช้ามา "ต่อปลั๊ก" กับ MCP server และ "คุยกับ agent ของเพื่อน" ผ่าน A2A</p>
+<h2>ภาพรวม</h2>
+<pre><code>         ┌─────────────┐   MCP    ┌──────────────────┐
+ เรา ──▶ │ Host Agent  │ ───────▶ │ Paper MCP Server │  ← tools ย้ายมาอยู่นี่แล้ว
+         │  (adk web)  │  stdio   │  (paper_mcp.py)  │
+         │             │          └──────────────────┘
+         │             │   A2A    ┌──────────────────┐
+         │             │ ───────▶ │ Summarizer Agent │  ← agent อีกตัว
+         └─────────────┘  HTTP    │   (port 8001)    │     อีกเครื่องก็ได้!
+                                  └──────────────────┘
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>เปรียบเหมือน</th>
+<th>ใช้ทำอะไร</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MCP</strong> (Model Context Protocol)</td>
+<td>USB-C ของ AI</td>
+<td>เสียบ "เครื่องมือ" ให้ agent ใช้ — เขียน server เดียว ใช้ได้กับทุก AI</td>
+</tr>
+<tr>
+<td><strong>A2A</strong> (Agent2Agent)</td>
+<td>นามบัตร + โทรศัพท์</td>
+<td>ให้ "agent คุยกับ agent" ข้าม process ข้ามเครื่อง ข้ามองค์กร</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>จำง่ายๆ: <strong>MCP = agent ↔ เครื่องมือ</strong> ส่วน <strong>A2A = agent ↔ agent</strong></p>
+</blockquote>
+<h2>เตรียมตัว (5 นาที)</h2>
+<p>copy <code>.env</code> จากช่วงเช้ามาใส่ทั้ง 2 agent:</p>
+<pre><code class="language-bash">cd workshop2-mcp-a2a
+cp ../workshop1-agentic-ai/research_agent/.env host_agent/.env
+cp ../workshop1-agentic-ai/research_agent/.env summarizer_agent/.env
+</code></pre>
+<h2>🔧 Step 1 — MCP: tools ย้ายออกไปนอก agent (15 นาที)</h2>
+<p>ช่วงเช้า tools เป็น function <strong>ใน code ของ agent</strong> — ช่วงบ่ายมันย้ายไปอยู่ <strong>server แยกต่างหาก</strong> (<code>mcp_server/paper_mcp.py</code>)</p>
+<p>เปิดดู 2 ไฟล์เทียบกัน:
+- <code>mcp_server/paper_mcp.py</code> — tools เดิมจากช่วงเช้า แต่ห่อด้วย <code>@mcp.tool()</code>
+- <code>host_agent/agent.py</code> — ไม่มี code ของ tool เลย! มีแค่ <code>McpToolset</code> ชี้ไปที่ server</p>
+<p>รัน:</p>
+<pre><code class="language-bash">adk web
+</code></pre>
+<p>เลือก <code>host_agent</code> แล้วลอง:</p>
+<blockquote>
+<p>หา paper เรื่อง "agent communication protocol" หน่อย</p>
+</blockquote>
+<p><strong>สิ่งที่ต้องดู 👀:</strong> agent ใช้ tool <code>search_papers</code> ได้ ทั้งที่ code ของ tool ไม่ได้อยู่ในตัวมัน —
+มันถูกส่งมาจาก MCP server ที่เป็นอีก process หนึ่ง (ลองดูใน trace)</p>
+<p>💡 server แบบเดียวกันนี้ ถ้าเอาไปเสียบ Claude Desktop หรือ Cursor ก็ใช้ได้ทันที — นี่คือพลังของ "มาตรฐานกลาง"</p>
+<h2>🌐 Step 2 — A2A: agent คุยกับ agent (25 นาที)</h2>
+<h3>2.1 เปิด Summarizer Agent เป็น A2A server (terminal ใหม่)</h3>
+<pre><code class="language-bash">cd workshop2-mcp-a2a
+source ../.venv/bin/activate
+uvicorn summarizer_agent.a2a_server:app --host 0.0.0.0 --port 8001
+</code></pre>
+<p>เปิดดู <strong>นามบัตร (Agent Card)</strong> ของมัน: <a href="http://localhost:8001/.well-known/agent-card.json">http://localhost:8001/.well-known/agent-card.json</a>
+— นี่คือสิ่งที่ agent อื่นอ่านเพื่อรู้ว่า agent ตัวนี้ทำอะไรได้</p>
+<h3>2.2 ให้ Host Agent ส่งงานต่อ</h3>
+<p>กลับมาที่ adk web (host_agent) แล้วลอง:</p>
+<blockquote>
+<p>หา paper เรื่อง "large language model agents" แล้วส่งให้ผู้เชี่ยวชาญช่วยสรุปหน่อย</p>
+</blockquote>
+<p><strong>สิ่งที่ต้องดู 👀:</strong> ใน trace จะเห็น host agent <strong>transfer งาน</strong> ไปให้ <code>summarizer_agent</code>
+ซึ่งวิ่งอยู่คนละ process ผ่าน HTTP — และใน terminal ของ uvicorn จะเห็น request วิ่งเข้ามาจริง</p>
+<h3>2.3 🔥 ไฮไลท์: เรียก agent ของเพื่อน (ข้ามเครื่องจริงๆ)</h3>
+<p>จับคู่กับเพื่อน (ต้องอยู่ Wi-Fi วงเดียวกัน):</p>
+<p><strong>เพื่อน (ฝั่งเปิด server):</strong> หา IP ตัวเองแล้วเปิด server ใหม่</p>
+<pre><code class="language-bash">ipconfig getifaddr en0        # Mac — สมมติได้ 192.168.1.42 (Windows: ipconfig)
+A2A_HOST=192.168.1.42 uvicorn summarizer_agent.a2a_server:app --host 0.0.0.0 --port 8001
+</code></pre>
+<p><strong>เรา (ฝั่งเรียก):</strong> ปิด adk web เดิม แล้วเปิดใหม่โดยชี้ไปเครื่องเพื่อน</p>
+<pre><code class="language-bash">SUMMARIZER_URL=http://192.168.1.42:8001 adk web
+</code></pre>
+<p>ลองสั่งสรุป paper อีกครั้ง — งานจะวิ่งไปประมวลผลบน <strong>เครื่องของเพื่อน</strong> 🤝
+(เพื่อนจะเห็น log วิ่งใน terminal ของตัวเอง)</p>
+<h2>🎤 Step 3 — โจทย์กลุ่ม เตรียม present (20 นาที)</h2>
+<p>แต่ละกลุ่มแก้ <code>summarizer_agent/agent.py</code> (ตรง <code>instruction</code>) ให้กลายเป็น <strong>specialist ประจำกลุ่ม</strong> เช่น:</p>
+<ul>
+<li>🌏 นักแปลศัพท์เทคนิคเป็นภาษาบ้านๆ</li>
+<li>🔍 นักวิจารณ์ระเบียบวิธีวิจัย (ชี้จุดอ่อนของ paper)</li>
+<li>💡 นักตั้งคำถามต่อยอด (อ่านแล้วเสนอหัวข้อวิจัยใหม่)</li>
+<li>🎭 อะไรก็ได้ที่กลุ่มคิดเอง!</li>
+</ul>
+<p>แล้ว present (15:15): ตั้งชื่อ agent, demo การเรียกข้ามเครื่อง, เล่าว่าถ้ามีเวลาต่อจะพัฒนาอะไรเพิ่ม</p>
+<h2>📌 สรุปสิ่งที่ได้เรียนรู้</h2>
+<table>
+<thead>
+<tr>
+<th>แนวคิด</th>
+<th>เห็นได้จาก</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP = มาตรฐานเสียบ tools (agent ↔ เครื่องมือ)</td>
+<td><code>McpToolset</code> ใน <code>host_agent/agent.py</code></td>
+</tr>
+<tr>
+<td>A2A = มาตรฐาน agent คุยกัน (agent ↔ agent)</td>
+<td><code>RemoteA2aAgent</code> + Agent Card</td>
+</tr>
+<tr>
+<td>Agent Card = นามบัตรของ agent</td>
+<td><code>/.well-known/agent-card.json</code></td>
+</tr>
+<tr>
+<td>ระบบ multi-agent ข้ามเครื่อง/องค์กร ทำได้จริง</td>
+<td>เรียก agent เครื่องเพื่อน</td>
+</tr>
+</tbody>
+</table>
+</article>
+<footer>Workshop Agentic AI · MCP · A2A — สร้างด้วย Google ADK</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🏠 หน้าหลัก — Workshop Agentic AI · MCP · A2A</title>
+<style>
+:root { --ink: #1f2430; --soft: #5b6472; --line: #e3e7ee; --bg: #f6f8fb;
+        --card: #ffffff; --accent: #2f6fed; --code-bg: #0f172a; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+       font-family: "Sukhumvit Set", "SF Pro Text", system-ui, "Segoe UI",
+                    Tahoma, "Noto Sans Thai", sans-serif;
+       line-height: 1.75; }
+nav { position: sticky; top: 0; z-index: 9; background: var(--card);
+      border-bottom: 1px solid var(--line); padding: 10px 16px;
+      display: flex; gap: 6px; flex-wrap: wrap; }
+nav a { text-decoration: none; color: var(--soft); padding: 6px 12px;
+        border-radius: 999px; font-size: 14px; }
+nav a:hover { background: var(--bg); }
+nav a.active { background: var(--accent); color: #fff; }
+main { max-width: 880px; margin: 0 auto; padding: 32px 20px 80px; }
+article { background: var(--card); border: 1px solid var(--line);
+          border-radius: 16px; padding: 36px 40px; }
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.35rem; margin-top: 2.2em; padding-bottom: 8px;
+     border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.1rem; margin-top: 1.8em; }
+a { color: var(--accent); }
+code { background: #eef1f6; border-radius: 6px; padding: 2px 6px;
+       font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+       font-size: .88em; }
+pre { background: var(--code-bg); color: #e2e8f0; border-radius: 12px;
+      padding: 18px 20px; overflow-x: auto; line-height: 1.55; }
+pre code { background: none; color: inherit; padding: 0; font-size: .85rem; }
+table { border-collapse: collapse; width: 100%; margin: 1em 0;
+        font-size: .95em; }
+th, td { border: 1px solid var(--line); padding: 9px 13px; text-align: left;
+         vertical-align: top; }
+th { background: var(--bg); }
+blockquote { margin: 1em 0; padding: 10px 18px; border-left: 4px solid
+             var(--accent); background: #eef4ff; border-radius: 0 10px 10px 0;
+             color: var(--ink); }
+blockquote p { margin: 4px 0; }
+footer { text-align: center; color: var(--soft); font-size: 13px;
+         margin-top: 28px; }
+@media print { nav { display: none; } article { border: none; } }
+</style>
+</head>
+<body>
+<nav><a href="README.html" class="active">🏠 หน้าหลัก</a>
+<a href="workshop1-agentic-ai/README.html">🤖 Workshop 1</a>
+<a href="workshop2-mcp-a2a/README.html">🔌 Workshop 2</a>
+<a href="project3-accounting-office/README.html">🏢 Project 3</a>
+<a href="resource/INSTRUCTOR_GUIDE.html">👨‍🏫 คู่มือผู้สอน</a></nav>
+<main><article>
+<h1>🎓 Workshop: Agentic AI + MCP &amp; A2A</h1>
+<p>สร้าง <strong>"Research Buddy"</strong> — ผู้ช่วยทำวิจัยส่วนตัวของนักศึกษา ด้วย <a href="https://google.github.io/adk-docs/">Google ADK</a></p>
+<table>
+<thead>
+<tr>
+<th>ช่วง</th>
+<th>Workshop</th>
+<th>โฟลเดอร์</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>11:00 – 12:00</td>
+<td><strong>Workshop 1: Agentic-AI</strong> — สร้าง agent ตัวแรก + เขียน tool เอง</td>
+<td><a href="workshop1-agentic-ai/"><code>workshop1-agentic-ai/</code></a></td>
+</tr>
+<tr>
+<td>14:15 – 15:15</td>
+<td><strong>Workshop 2: MCP &amp; A2A</strong> — ต่อ agent เข้ากับโลกภายนอก + คุยกับ agent ของเพื่อน</td>
+<td><a href="workshop2-mcp-a2a/"><code>workshop2-mcp-a2a/</code></a></td>
+</tr>
+<tr>
+<td>demo ปิดท้าย</td>
+<td><strong>Project 3: AI Accounting Office</strong> — บริษัทจำลอง multi-agent (CEO + นักวิเคราะห์ + นักบัญชี) รวม MCP + A2A</td>
+<td><a href="project3-accounting-office/"><code>project3-accounting-office/</code></a></td>
+</tr>
+</tbody>
+</table>
+<h2>⚙️ Setup (ทำก่อนเริ่ม workshop — ใช้เวลา ~5 นาที)</h2>
+<blockquote>
+<p>ต้องมี <strong>Python 3.10 – 3.13</strong> (เช็คด้วย <code>python3 --version</code>)</p>
+</blockquote>
+<h3>1) Clone และติดตั้ง</h3>
+<pre><code class="language-bash">git clone &lt;repo-url&gt;
+cd workshop-TU-agent-mcp-a2a
+
+python3 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+
+pip install -r requirements.txt
+</code></pre>
+<h3>2) ขอ Gemini API key (ฟรี)</h3>
+<ol>
+<li>ไปที่ <a href="https://aistudio.google.com/apikey">https://aistudio.google.com/apikey</a></li>
+<li>ล็อกอินด้วย Google account → กด <strong>Create API key</strong></li>
+<li>copy key เก็บไว้ (จะใช้ในขั้นถัดไป)</li>
+</ol>
+<h3>3) ใส่ API key</h3>
+<pre><code class="language-bash">cp workshop1-agentic-ai/research_agent/.env.example workshop1-agentic-ai/research_agent/.env
+</code></pre>
+<p>แล้วเปิดไฟล์ <code>.env</code> ใส่ key ของตัวเอง:</p>
+<pre><code>GOOGLE_GENAI_USE_VERTEXAI=FALSE
+GOOGLE_API_KEY=ใส่_key_ของคุณตรงนี้
+</code></pre>
+<h3>4) ทดสอบว่าใช้งานได้</h3>
+<pre><code class="language-bash">cd workshop1-agentic-ai
+adk web
+</code></pre>
+<p>เปิด browser ไปที่ <a href="http://localhost:8000">http://localhost:8000</a> — ถ้าเห็นหน้า chat UI แสดงว่าพร้อมแล้ว! 🎉</p>
+<h2>🗺️ ภาพรวมของทั้งวัน</h2>
+<pre><code>Workshop 1 (เช้า)                    Workshop 2 (บ่าย)
+┌─────────────────────┐             ┌────────────────────────────────┐
+│  Research Agent      │             │  Host Agent                    │
+│  ┌───────────────┐   │             │   ├── MCP ──▶ Paper Server     │
+│  │ tools ของเรา   │   │   ───────▶  │   │          (อีก process)      │
+│  │ search_arxiv  │   │             │   └── A2A ──▶ Summarizer Agent │
+│  │ save_note     │   │             │              (อีกเครื่องก็ได้!)   │
+│  └───────────────┘   │             └────────────────────────────────┘
+└─────────────────────┘
+        ทั้งหมดดูผ่าน adk web — เห็นทุก step ที่ agent คิดและเรียก tool
+</code></pre>
+<h2>🆘 แก้ปัญหาที่เจอบ่อย</h2>
+<table>
+<thead>
+<tr>
+<th>อาการ</th>
+<th>วิธีแก้</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>adk: command not found</code></td>
+<td>ยังไม่ activate venv → <code>source .venv/bin/activate</code></td>
+</tr>
+<tr>
+<td><code>API key not valid</code></td>
+<td>เช็คว่า copy key ครบ ไม่มีช่องว่างหน้า-หลัง</td>
+</tr>
+<tr>
+<td><code>429 RESOURCE_EXHAUSTED</code></td>
+<td>free tier ติด rate limit → รอ 1 นาทีแล้วลองใหม่</td>
+</tr>
+<tr>
+<td>Python 3.14 ใช้ไม่ได้</td>
+<td>ติดตั้ง Python 3.13: <code>brew install python@3.13</code></td>
+</tr>
+</tbody>
+</table>
+</article>
+<footer>Workshop Agentic AI · MCP · A2A — สร้างด้วย Google ADK</footer>
+</main>
+</body>
+</html>
