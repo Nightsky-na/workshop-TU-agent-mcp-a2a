@@ -15,7 +15,7 @@
 ### 1) Clone และติดตั้ง
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Nightsky-na/workshop-TU-agent-mcp-a2a.git
 cd workshop-TU-agent-mcp-a2a
 
 python3 -m venv .venv
